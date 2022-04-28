@@ -1,0 +1,5 @@
+/node_modules
+/vendor
+/public
+/resources/sass/_variables.scss
+/resources/sass/app.scss

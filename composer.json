@@ -1,0 +1,84 @@
+{
+    "name": "playable/shareg",
+    "type": "project",
+    "description": "ShareG",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.2",
+        "barryvdh/laravel-debugbar": "^3.5",
+        "barryvdh/laravel-snappy": "^0.4.8",
+        "beyondcode/laravel-server-timing": "^1.1",
+        "brozot/laravel-fcm": "^1.3",
+        "doctrine/dbal": "^2.10",
+        "fideloper/proxy": "^4.0",
+        "h4cc/wkhtmltopdf-amd64": "0.12.4",
+        "h4cc/wkhtmltopdf-i386": "0.12.4",
+        "intervention/image": "^2.5",
+        "jenssegers/agent": "^2.6",
+        "laravel/framework": "^6.0",
+        "laravel/helpers": "^1.2",
+        "laravel/horizon": "^3.3",
+        "laravel/tinker": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "linecorp/line-bot-sdk": "^6.1",
+        "maatwebsite/excel": "^3.1",
+        "predis/predis": "^1.1",
+        "sabberworm/php-css-parser": "^8.3",
+        "spatie/laravel-image-optimizer": "^1.6",
+        "stripe/stripe-php": "^7.77"
+    },
+    "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.0",
+        "fzaninotto/faker": "^1.4",
+        "laravel/ui": "^1.0",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^3.0",
+        "phpunit/phpunit": "^7.5"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "files": [
+            "app/Helpers/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    }
+}

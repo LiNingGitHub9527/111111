@@ -1,0 +1,74 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+body {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+.slick-slide {
+  height: auto !important;
+}
+
+.slick-arrow.slick-prev {
+  position: absolute !important;
+  top: calc(50% - 25px) !important;
+  left: 0 !important;
+  z-index: 100 !important;
+  width: 50px !important;
+  height: 50px !important;
+  padding: 19px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(-1, 1) !important;
+}
+
+.slick-arrow.slick-next {
+  position: absolute !important;
+  // top: calc(50% - 25px) !important;
+  right: 0 !important;
+  width: 50px !important;
+  height: 50px !important;
+  padding: 19px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.slick-prev:before, .slick-next:before {
+  color: rgb(0, 0, 0) !important;
+}
+
+.listContainer {
+  transition: height .3s ease-in-out;
+}
+
+.listBeforeShown {
+  top: 110vh;
+  opacity: 0;
+  transition: all .5s ease-in-out;
+}
+
+.listShown {
+  top: 0;
+  opacity: 1;
+  transition: all .5s ease-in-out;
+  transition-delay: .2s;
+}
+
+.listHidden {
+  top: 110vh;
+  opacity: 0;
+  transition: all .5s ease-in-out;
+}
+
+.spinner {
+  border-top-color: rgba(0, 0, 0, 0.87);
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
