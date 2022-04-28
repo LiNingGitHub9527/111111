@@ -13,40 +13,40 @@ jobs:
           working_directory: ~/
           command: |
             sudo tee -a /etc/hosts \<<<'127.0.0.1 local.shareg.com'
-            git clone git@github.com:superHeroDDD/111111.git
-            mkdir ~/SHAREG_docker/apps
-            mv ~/111111/.env4circleci ~/111111/.env
-            mv ~/111111 ~/SHAREG_docker/apps
+            git clone git@github.com:FIELDASIA/SHAREG_docker.git
+            mkdir ~/PMS_docker/apps
+            mv ~/seven-garden/.env4circleci ~/seven-garden/.env
+            mv ~/seven-garden ~/PMS_docker/apps
       - run:
           name: "コンテナのビルド"
-          working_directory: ~/SHAREG_docker
+          working_directory: ~/PMS_docker
           command: |
             docker-compose build
       - run:
           name: "コンテナの立ち上げ"
-          working_directory: ~/SHAREG_docker
+          working_directory: ~/PMS_docker
           command: |
             docker-compose up -d
       - run:
           name: "DB初期化"
-          working_directory: ~/SHAREG_docker
+          working_directory: ~/PMS_docker
           command: |
-            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database shareg_local' | /usr/bin/mysql -uroot -proot"
+            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database pms_local' | /usr/bin/mysql -uroot -proot"
       - run:
           name: "初期設定"
-          working_directory: ~/SHAREG_docker
+          working_directory: ~/PMS_docker
           command: |
-            docker-compose exec php sh -c "cd 111111 && /usr/local/bin/composer install"
-            docker-compose exec php sh -c "cd 111111 && /usr/local/bin/php artisan key:generate"
-            docker-compose exec php sh -c "cd 111111 && /usr/local/bin/php artisan storage:link"
-            docker-compose exec php sh -c "cd 111111 && /bin/chmod -R 777 storage/"
-            docker-compose exec php sh -c "cd 111111 && /usr/local/bin/php artisan migrate"
-            docker-compose exec php sh -c "cd 111111 && /usr/local/bin/php artisan db:seed"
+            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/composer install"
+            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan key:generate"
+            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan storage:link"
+            docker-compose exec php sh -c "cd seven-garden && /bin/chmod -R 777 storage/"
+            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan migrate"
+            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan db:seed"
       - run:
           name: "テスト"
-          working_directory: ~/SHAREG_docker/apps/111111
+          working_directory: ~/PMS_docker/apps/seven-garden
           command: |
-            docker-compose exec php sh -c "cd 111111 && vendor/bin/phpunit tests/Unit/ExampleTest.php"
+            docker-compose exec php sh -c "cd seven-garden && vendor/bin/phpunit tests/Unit/ExampleTest.php"
   deploy:
     machine:
       image: circleci/classic:edge
@@ -55,7 +55,7 @@ jobs:
       - add_ssh_keys:
           # circle ciで登録した秘密鍵のfingerprint
           fingerprints:
-            - "d5:5f:b1:0b:2d:7e:60:b7:b6:f9:f0:6f:fd:72:fd:9a"
+            - "62:bd:fb:ce:92:f8:f4:e8:ad:5e:96:44:e2:ac:f1:67"
       # ステージング環境で実行したいコマンド
       - run: ssh ${STG_USER}@${STG_HOST} 'cd ~ && pwd'
 
