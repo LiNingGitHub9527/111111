@@ -13,28 +13,28 @@ jobs:
           working_directory: ~/
           command: |
             sudo tee -a /etc/hosts \<<<'127.0.0.1 local.shareg.com'
-            git clone git@github.com:superHeroDDD/SHAREG_docker.git
-            mkdir ~/PMS_docker/apps
-            mv ~/seven-garden/.env4circleci ~/seven-garden/.env
-            mv ~/seven-garden ~/PMS_docker/apps
+            git clone git@github.com:superHeroDDD/furry-happiness.git
+            mkdir ~/furry-happiness/apps
+            mv ~/111111/.env4circleci ~/111111/.env
+            mv ~/111111 ~/furry-happiness/apps
       - run:
           name: "コンテナのビルド"
-          working_directory: ~/PMS_docker
+          working_directory: ~/furry-happiness
           command: |
             docker-compose build
       - run:
           name: "コンテナの立ち上げ"
-          working_directory: ~/PMS_docker
+          working_directory: ~/furry-happiness
           command: |
             docker-compose up -d
       - run:
           name: "DB初期化"
-          working_directory: ~/PMS_docker
+          working_directory: ~/furry-happiness
           command: |
-            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database pms_local' | /usr/bin/mysql -uroot -proot"
+            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database shareg_local' | /usr/bin/mysql -uroot -proot"
       - run:
           name: "初期設定"
-          working_directory: ~/PMS_docker
+          working_directory: ~/furry-happiness
           command: |
             docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/composer install"
             docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan key:generate"
