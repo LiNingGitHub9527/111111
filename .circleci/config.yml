@@ -55,7 +55,7 @@ jobs:
       - add_ssh_keys:
           # circle ciで登録した秘密鍵のfingerprint
           fingerprints:
-            - "62:bd:fb:ce:92:f8:f4:e8:ad:5e:96:44:e2:ac:f1:67"
+            - "ff:69:e9:0b:ec:c9:44:2d:76:0a:c0:bb:f0:8f:5d:51"
       # ステージング環境で実行したいコマンド
       - run: ssh ${STG_USER}@${STG_HOST} 'cd ~ && pwd'
 
