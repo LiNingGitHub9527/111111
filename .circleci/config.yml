@@ -14,27 +14,27 @@ jobs:
           command: |
             sudo tee -a /etc/hosts \<<<'127.0.0.1 local.shareg.com'
             git clone git@github.com:superHeroDDD/111111.git
-            mkdir ~/111111/apps
+            mkdir ~/SHAREG_docker/apps
             mv ~/111111/.env4circleci ~/111111/.env
-            mv ~/111111 ~/111111/apps
+            mv ~/111111 ~/SHAREG_docker/apps
       - run:
           name: "コンテナのビルド"
-          working_directory: ~/111111
+          working_directory: ~/SHAREG_docker
           command: |
             docker-compose build
       - run:
           name: "コンテナの立ち上げ"
-          working_directory: ~/111111
+          working_directory: ~/SHAREG_docker
           command: |
             docker-compose up -d
       - run:
           name: "DB初期化"
-          working_directory: ~/111111
+          working_directory: ~/SHAREG_docker
           command: |
-            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database shareg' | /usr/bin/mysql -uroot -proot"
+            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database shareg_local' | /usr/bin/mysql -uroot -proot"
       - run:
           name: "初期設定"
-          working_directory: ~/111111
+          working_directory: ~/SHAREG_docker
           command: |
             docker-compose exec php sh -c "cd 111111 && /usr/local/bin/composer install"
             docker-compose exec php sh -c "cd 111111 && /usr/local/bin/php artisan key:generate"
@@ -44,7 +44,7 @@ jobs:
             docker-compose exec php sh -c "cd 111111 && /usr/local/bin/php artisan db:seed"
       - run:
           name: "テスト"
-          working_directory: ~/111111/apps/111111
+          working_directory: ~/SHAREG_docker/apps/111111
           command: |
             docker-compose exec php sh -c "cd 111111 && vendor/bin/phpunit tests/Unit/ExampleTest.php"
   deploy:
