@@ -428,7 +428,7 @@ class ReservationController extends ApiBaseController
             Log::info('client reservation cancel/now show reservation :' . 'hotelId: ' . $reservation->hotelId . ' / reservationId: ' .  $reservation->id . 'function "changeStatus" error exception: ' . $e);
             return $this->error('システムエラー', 500);
         }
-        if ($isHotel) {
+        if ($isHote) {
             TemairazuService::instance()->sendReservationNotification($reservation->client_id, $reservation->id);
         } else {
             $this->otherReserveService->sendCancelNotificationToCRM($reservation);
