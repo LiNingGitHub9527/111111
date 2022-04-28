@@ -13,7 +13,7 @@ jobs:
           working_directory: ~/
           command: |
             sudo tee -a /etc/hosts \<<<'127.0.0.1 local.shareg.com'
-            git clone git@github.com:superHeroDDD/111111.git
+            git clone git@github.com:FIELDASIA/SHAREG_docker.git
             mkdir ~/PMS_docker/apps
             mv ~/seven-garden/.env4circleci ~/seven-garden/.env
             mv ~/seven-garden ~/PMS_docker/apps
