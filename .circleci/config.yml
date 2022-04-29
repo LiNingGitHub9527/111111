@@ -1,4 +1,4 @@
-versiversion: 2.1
+version: 2.1
 jobs:
   build:
     docker:
@@ -37,27 +37,3 @@ jobs:
       - run:
           name: Run PHPUnit
           command: vendor/bin/phpunit
-  deploy:
-    machine:
-      image: circleci/classic:edge
-    steps:
-      - checkout
-      - add_ssh_keys:
-          # circle ciで登録した秘密鍵のfingerprint
-          fingerprints:
-            - "a4:1d:58:54:7e:fb:11:b8:e1:86:a6:12:20:63:c3:2b"
-      # ステージング環境で実行したいコマンド
-      - run: ssh ${SLACK_USER}@${SLACK_HOST} 'cd ~ && pwd'
-
-workflows:
-  build_and_deploy:
-    jobs:
-      - build
-      - deploy:
-          # 先にbuildを実行させるためbuildのジョブに依存させる
-          requires:
-            - build
-          filters:
-            branches:
-              # pull requestのマージでdeployジョブを実行させるブランチ
-              only: circleci-deploy-test
