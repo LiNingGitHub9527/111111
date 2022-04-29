@@ -1,52 +1,42 @@
-version: 2.1
-
+versiversion: 2.1
 jobs:
   build:
-    machine:
-      # docker composeが使えるイメージを選択
-      image: circleci/classic:edge
-    working_directory: ~/seven-garden
+    docker:
+      - image: cimg/php:7.4.26
+        environment:
+          TZ: UTC
+          LANG: en_US.UTF-8
+          LANGUAGE: en_US:en
+          LC_ALL: en_US.UTF-8
+          COMPOSER_ALLOW_SUPERUSER: 1
+          COMPOSER_HOME: /composer
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_DATABASE: laravel_testing
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_PASSWORD: secret
+          TZ: UTC
+        command:
+          [
+            --character-set-server=utf8mb4,
+            --collation-server=utf8mb4_0900_ai_ci,
+          ]
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-
       - run:
-          name: "環境構築"
-          working_directory: ~/
-          command: |
-            sudo tee -a /etc/hosts \<<<'127.0.0.1 local.seven-garden.com'
-            git clone git@github.com:superHeroDDD/furry-happiness.git
-            mkdir ~/furry-happiness/apps
-            mv ~/seven-garden/.env4circleci ~/seven-garden/.env
-            mv ~/seven-garden ~/furry-happiness/apps
+          name: Install PHP libraries
+          command: composer install -n --prefer-dist
+      - save_cache:
+          paths:
+            - ./vendor
+          key: v1-dependencies-{{ checksum "composer.json" }}
       - run:
-          name: "コンテナのビルド"
-          working_directory: ~/furry-happiness
-          command: |
-            docker-compose build
-      - run:
-          name: "コンテナの立ち上げ"
-          working_directory: ~/furry-happiness
-          command: |
-            docker-compose up -d
-      - run:
-          name: "DB初期化"
-          working_directory: ~/furry-happiness
-          command: |
-            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database pms_local' | /usr/bin/mysql -uroot -proot"
-      - run:
-          name: "初期設定"
-          working_directory: ~/furry-happiness
-          command: |
-            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/composer install"
-            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan key:generate"
-            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan storage:link"
-            docker-compose exec php sh -c "cd seven-garden && /bin/chmod -R 777 storage/"
-            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan migrate"
-            docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan db:seed"
-      - run:
-          name: "テスト"
-          working_directory: ~/furry-happiness/apps/seven-garden
-          command: |
-            docker-compose exec php sh -c "cd seven-garden && vendor/bin/phpunit tests/Unit/ExampleTest.php"
+          name: Run PHPUnit
+          command: vendor/bin/phpunit
   deploy:
     machine:
       image: circleci/classic:edge
@@ -55,9 +45,9 @@ jobs:
       - add_ssh_keys:
           # circle ciで登録した秘密鍵のfingerprint
           fingerprints:
-            - "62:bd:fb:ce:92:f8:f4:e8:ad:5e:96:44:e2:ac:f1:67"
+            - "a4:1d:58:54:7e:fb:11:b8:e1:86:a6:12:20:63:c3:2b"
       # ステージング環境で実行したいコマンド
-      - run: ssh ${STG_USER}@${STG_HOST} 'cd ~ && pwd'
+      - run: ssh ${SLACK_USER}@${SLACK_HOST} 'cd ~ && pwd'
 
 workflows:
   build_and_deploy:
