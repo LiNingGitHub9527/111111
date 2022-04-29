@@ -5,36 +5,36 @@ jobs:
     machine:
       # docker composeが使えるイメージを選択
       image: circleci/classic:edge
-    working_directory: ~/111111
+    working_directory: ~/seven-garden
     steps:
       - checkout
       - run:
           name: "環境構築"
           working_directory: ~/
           command: |
-            sudo tee -a /etc/hosts \<<<'127.0.0.1 local.shareg.com'
-            git clone git@github.com:superHeroDDD/furry-happiness.git
-            mkdir ~/furry-happiness/apps
-            mv ~/111111/.env.example ~/111111/.env
-            mv ~/111111 ~/furry-happiness/apps
+            sudo tee -a /etc/hosts \<<<'127.0.0.1 local.seven-garden.com'
+            git clone git@github.com:FIELDASIA/PMS_docker.git
+            mkdir ~/PMS_docker/apps
+            mv ~/seven-garden/.env4circleci ~/seven-garden/.env
+            mv ~/seven-garden ~/PMS_docker/apps
       - run:
           name: "コンテナのビルド"
-          working_directory: ~/furry-happiness
+          working_directory: ~/PMS_docker
           command: |
             docker-compose build
       - run:
           name: "コンテナの立ち上げ"
-          working_directory: ~/furry-happiness
+          working_directory: ~/PMS_docker
           command: |
             docker-compose up -d
       - run:
           name: "DB初期化"
-          working_directory: ~/furry-happiness
+          working_directory: ~/PMS_docker
           command: |
-            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database shareg_local' | /usr/bin/mysql -uroot -proot"
+            sleep 60 && docker-compose exec mysql sh -c "/bin/echo 'create database pms_local' | /usr/bin/mysql -uroot -proot"
       - run:
           name: "初期設定"
-          working_directory: ~/furry-happiness
+          working_directory: ~/PMS_docker
           command: |
             docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/composer install"
             docker-compose exec php sh -c "cd seven-garden && /usr/local/bin/php artisan key:generate"
@@ -55,7 +55,7 @@ jobs:
       - add_ssh_keys:
           # circle ciで登録した秘密鍵のfingerprint
           fingerprints:
-            - "ff:69:e9:0b:ec:c9:44:2d:76:0a:c0:bb:f0:8f:5d:51"
+            - "62:bd:fb:ce:92:f8:f4:e8:ad:5e:96:44:e2:ac:f1:67"
       # ステージング環境で実行したいコマンド
       - run: ssh ${STG_USER}@${STG_HOST} 'cd ~ && pwd'
 
