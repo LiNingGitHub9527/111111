@@ -13,7 +13,7 @@ jobs:
           working_directory: ~/
           command: |
             sudo tee -a /etc/hosts \<<<'127.0.0.1 local.seven-garden.com'
-            git clone git@github.com:FIELDASIA/furry-happiness.git
+            git clone git@github.com:superHeroDDD/furry-happiness.git
             mkdir ~/furry-happiness/apps
             mv ~/seven-garden/.env4circleci ~/seven-garden/.env
             mv ~/seven-garden ~/furry-happiness/apps
